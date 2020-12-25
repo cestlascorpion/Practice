@@ -1,0 +1,18 @@
+syntax = "proto2";
+
+package tutorial;
+
+message Person {
+  required int32 age = 1;
+  required bytes name = 2;
+}
+
+message Family {
+  required int32 address = 1;
+  repeated Person person_list = 2;
+}
+
+message Account{
+  required bytes province = 1;
+  repeated Family family_list = 2;
+}
