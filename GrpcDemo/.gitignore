@@ -1,0 +1,10 @@
+.vscode
+.idea
+
+cpp/build
+go/build
+go/vendor
+
+*.pb.cc
+*.pb.h
+*.pb.go
