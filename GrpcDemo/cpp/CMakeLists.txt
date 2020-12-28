@@ -68,7 +68,9 @@ include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 foreach(_target
     example_server
     example_client
-    example_async_server)
+    example_async_server
+    example_async_client
+    example_async_thread_client)
     
     add_executable(${_target} 
         "${_target}.cpp"

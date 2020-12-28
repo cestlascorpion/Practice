@@ -11,9 +11,9 @@ using namespace std;
 
 namespace example {
 
-class ServerImpl final {
+class ExampleServer final {
 public:
-    ~ServerImpl() {}
+    ~ExampleServer() {}
 
 public:
     void Run() {
@@ -89,7 +89,7 @@ private:
 
 int main() {
     cout << "hello, World!" << endl;
-    example::ServerImpl server;
+    example::ExampleServer server;
     server.Run();
     return 0;
 }
