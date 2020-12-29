@@ -45,7 +45,7 @@ set(_GRPC_CPP_PLUGIN_EXECUTABLE $<TARGET_FILE:gRPC::grpc_cpp_plugin>)
 set(PROTO_NAME example)
 
 # Proto file
-get_filename_component(PROTO_FILE "../proto/${PROTO_NAME}.proto" ABSOLUTE)
+get_filename_component(PROTO_FILE "../../proto/${PROTO_NAME}.proto" ABSOLUTE)
 get_filename_component(PROTO_PATH "${PROTO_FILE}" PATH)
 
 # Generated sources

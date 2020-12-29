@@ -1,9 +1,9 @@
 .vscode
 .idea
 
-cpp/build
-go/build
-go/vendor
+cpp/*/build
+go/*/build
+go/*/vendor
 
 *.pb.cc
 *.pb.h
