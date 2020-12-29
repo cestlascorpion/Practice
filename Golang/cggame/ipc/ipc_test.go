@@ -19,9 +19,10 @@ func TestIpc(t *testing.T) {
 	server := NewMyServer(&EchoServer{})
 	client := NewMyClient(server)
 
-	resp, _ := client.Call("foo", "from client")
-	if resp.Code != "OK" || resp.Body != "foo - from client" {
-		t.Error("client call failed. resp", resp.Code, resp.Body)
+	resp1, _ := client.Call("foo", "from client1")
+	resp2, _ := client.Call("foo", "from client2")
+	if resp1.Code != "OK" || resp1.Body != "foo - from client1" || resp2.Code != "OK" || resp2.Body != "foo - from client2" {
+		t.Error("client call failed. resp", resp1, resp2)
 	}
 	client.Close()
 }
