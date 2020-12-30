@@ -222,6 +222,32 @@ func testTourTree() {
 	fmt.Println(Same(t1, t2))
 }
 
+type T struct {
+	A int
+	B string
+}
+
+func testReflect() {
+	var x float64 = 3.2
+	v := reflect.ValueOf(x)
+	t := reflect.TypeOf(x)
+	fmt.Println("value", v, "type", t) // value 3.2 type float64
+	var i interface{} = x
+	fmt.Println("type", reflect.TypeOf(i))   // type float64
+	fmt.Println("value", reflect.ValueOf(i)) // value 3.2
+
+	fmt.Println(v.Kind()) // float64
+	fmt.Println(t.Kind()) // float64
+
+	_t := T{100, "101"}
+	_s := reflect.ValueOf(&_t).Elem()
+	typeOfT := _s.Type()
+	for i := 0; i < _s.NumField(); i++ {
+		_f := _s.Field(i)
+		fmt.Printf("%d: %s %s = %v\n",i, typeOfT.Field(i).Name, _f.Type(), _f.Interface())
+	}
+}
+
 func main() {
 	fmt.Println("hello, world")
 
@@ -234,7 +260,9 @@ func main() {
 	// testError()
 
 	// testIO()
-	//testTourReader()
+	// testTourReader()
 
-	testTourTree()
+	// testTourTree()
+
+	testReflect()
 }
