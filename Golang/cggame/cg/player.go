@@ -18,8 +18,17 @@ func NewPlayer() *Player {
 
 	go func(p *Player) {
 		for {
-			msg := <-p.mq
-			fmt.Println(p.Name, "recv msg:", msg.Content)
+			msg, ok := <-p.mq
+			if !ok {
+				fmt.Println("player", p.Name, "mq closed")
+				return
+			}
+			if len(msg.From) > 0 && len(msg.To) > 0 {
+				fmt.Println(p.Name, "recv p2p msg", msg.From, "->", msg.To, ":", msg.Content)
+			} else {
+				fmt.Println(p.Name, "recv broadcast msg:", msg.Content)
+			}
+
 		}
 	}(player)
 

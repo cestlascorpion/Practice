@@ -1,3 +1,3 @@
 mkdir -p build && cd build
-rm musicplayer
-go build -o musicplayer ../main.go
+rm cgss
+go build -o cgss ../cgss/cgss.go

@@ -24,7 +24,6 @@ func (c *MyClient) Call(method, params string) (*Response, error) {
 		fmt.Println("invalid request")
 		return nil, err1
 	}
-	// fmt.Println("Client Call req:", req, "Marshal", string(request))
 	c.conn <- string(request)
 	response := <-c.conn
 
@@ -34,7 +33,6 @@ func (c *MyClient) Call(method, params string) (*Response, error) {
 		fmt.Println("invalid response")
 		return nil, err2
 	}
-	// fmt.Println("Client Call resp:", string(response), "Unmarshal", resp)
 	return &resp, nil
 }
 

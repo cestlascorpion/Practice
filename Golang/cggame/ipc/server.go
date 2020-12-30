@@ -48,14 +48,12 @@ func (s *MyServer) Connect() chan string {
 				fmt.Println("invalid request")
 				return
 			}
-			// fmt.Println("Server Call req:", request, "Unmarshal", req)
 			response := s.Handle(req.Method, req.Params)
 			resp, err := json.Marshal(response)
 			if err != nil {
 				fmt.Println("invalid response")
 				return
 			}
-			// fmt.Println("Server Call resp:", response, "Marshal", string(resp))
 			c <- string(resp)
 		}
 	}(session)
