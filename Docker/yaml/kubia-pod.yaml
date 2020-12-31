@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kubia-pod
+  labels:
+    name: kubia-pod
+    env: testing
+spec:
+  containers:
+  - name: kubia-container
+    image: cestlascorpion/kubia
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    ports:
+      - containerPort: 8080
+        protocol: TCP
