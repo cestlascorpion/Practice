@@ -1,20 +1,21 @@
 kind: ReplicaSet
 apiVersion: apps/v1
 metadata:
-  name: kubia-rs
+  name: kubia-rs-namedport
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: kubia
+      app: kubia-namedport
   template:
     metadata:
-      name: kubia-pod
+      name: kubia-pod-namedport
       labels:
-        app: kubia
+        app: kubia-namedport
     spec:
       containers:
-        - name: kubia-container
+        - name: kubia-container-namedport
           image: cestlascorpion/kubia
           ports:
-            - containerPort: 8080
+            - name: http
+              containerPort: 8080

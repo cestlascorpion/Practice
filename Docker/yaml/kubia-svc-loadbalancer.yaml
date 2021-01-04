@@ -1,0 +1,11 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: kubia-loadbalancer
+spec:
+  selector:
+    app: kubia
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 8080

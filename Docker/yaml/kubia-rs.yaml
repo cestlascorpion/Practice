@@ -1,5 +1,5 @@
-apiVersion: apps/v1
 kind: ReplicaSet
+apiVersion: apps/v1
 metadata:
   name: kubia-rs
 spec:

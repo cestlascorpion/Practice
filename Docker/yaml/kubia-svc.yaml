@@ -1,0 +1,11 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: kubia-svc
+spec:
+  selector:
+    app: kubia
+  ports:
+  - name: kubia-port
+    port: 80
+    targetPort: 8080
