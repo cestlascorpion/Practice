@@ -1,0 +1,13 @@
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: kubia-ingress
+spec:
+  rules:
+  - host: www.kubia-example.com
+    http:
+      paths:
+        - path: /kubia
+          backend: 
+            serviceName: kubia-svc
+            servicePort: 80
