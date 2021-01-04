@@ -1,0 +1,22 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: kubia-liveness
+  labels:
+    app: kubia
+spec:
+  containers:
+  - name: kubia
+    image: luksa/kubia-unhealthy
+    livenessProbe:
+        httpGet:
+          path: /
+          port: 8080
+        initialDelaySeconds: 15
+        failureThreshold: 5
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    ports:
+      - containerPort: 8080
