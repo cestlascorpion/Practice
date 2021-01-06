@@ -1,0 +1,27 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: gitrepo
+  labels:
+    app: gitrepo
+spec:
+  containers:
+  - name: web-server
+    image: nginx:alpine
+    volumeMounts:
+      - mountPath: /usr/share/nginx/html
+        name: html
+        readOnly: true
+    ports:
+      - containerPort: 80
+        protocol: TCP
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+  volumes:
+    - name: html
+      gitRepo:
+        repository: https://github.com/cestlascorpion/kubia-website-example.git
+        revision: master
+        directory: .
