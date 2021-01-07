@@ -8,7 +8,7 @@ metadata:
 spec:
   containers:
   - name: kubia-container
-    image: cestlascorpion/kubia
+    image: luksa/kubia
     resources:
       limits:
         memory: "128Mi"

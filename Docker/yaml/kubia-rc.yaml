@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
         - name: kubia-container
-          image: cestlascorpion/kubia
+          image: luksa/kubia
           ports:
             - containerPort: 8080

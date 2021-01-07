@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: kubia-container
-          image: cestlascorpion/kubia
+          image: luksa/kubia
           readinessProbe:
               exec:
                 command:
