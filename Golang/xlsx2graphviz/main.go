@@ -23,6 +23,11 @@ func init() {
 }
 
 func main() {
+	getGraph(true)
+	getGraph(false)
+}
+
+func getGraph(addTag bool) {
 	if len(svr) == 0 || len(xls) == 0 || len(sht) == 0 {
 		fmt.Println("invalid parameters")
 		return
@@ -61,16 +66,22 @@ func main() {
 	buffer := new(bytes.Buffer) // dot
 
 	buffer.WriteString("digraph G {\n")
-	dump(svr, dict, buffer, set, 0) // 递归添加节点关系
+	dumpBuf(svr, dict, buffer, set, 0, addTag) // 递归添加节点关系
 	buffer.WriteString("}")
 
-	err = writeDot(svr+".dot", buffer.String())
+	var path string
+	if addTag {
+		path = svr + ".tag.dot"
+	} else {
+		path = svr + ".dot"
+	}
+	err = writeDot(path, buffer.String())
 	if err != nil {
 		fmt.Println(err)
 	}
 }
 
-func dump(caller string, dict map[string][]string, buffer *bytes.Buffer, set map[string]int, depth int) {
+func dumpBuf(caller string, dict map[string][]string, buffer *bytes.Buffer, set map[string]int, depth int, addDepth bool) {
 	_, ok := set[caller]
 	if !ok {
 		set[caller] = 1
@@ -83,10 +94,14 @@ func dump(caller string, dict map[string][]string, buffer *bytes.Buffer, set map
 		return
 	}
 	for _, callee := range ss {
-		relation := fmt.Sprintf("\t%s->%s;\n", caller+"_"+strconv.Itoa(depth), callee+"_"+strconv.Itoa(depth+1))
+		var relation string
+		if addDepth {
+			relation = fmt.Sprintf("\t%s->%s;\n", caller+"_"+strconv.Itoa(depth), callee+"_"+strconv.Itoa(depth+1))
+		} else {
+			relation = fmt.Sprintf("\t%s->%s;\n", caller, callee)
+		}
 		buffer.WriteString(relation)
-		dump(callee, dict, buffer, set, depth+1)
-
+		dumpBuf(callee, dict, buffer, set, depth+1, addDepth)
 	}
 }
 
