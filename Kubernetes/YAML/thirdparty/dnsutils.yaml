@@ -1,0 +1,15 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: dnsutils
+spec:
+  containers:
+  - name: dnsutils
+    command:
+      - sleep 
+      - infinity
+    image: tutum/dnsutils
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"

@@ -5,6 +5,7 @@ metadata:
 spec:
   selector:
     app: kubia
+  type: ClusterIP
   ports:
   - name: kubia-port
     port: 80
