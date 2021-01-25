@@ -1,0 +1,49 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: service-reader
+  namespace: foo
+rules:
+  # service资源是核心apiGroup的资源所以为空
+- apiGroups: [""]
+  # 允许的动作
+  verbs: ["get", "list"]
+  # 必须使用复数形式
+  resources: ["services"]
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: service-reader
+  namespace: bar
+rules:
+  # service资源是核心apiGroup的资源所以为空
+- apiGroups: [""]
+  # 允许的动作
+  verbs: ["get", "list"]
+  # 必须使用复数形式
+  resources: ["services"]
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: test
+  namespace: foo
+roleRef:
+  # 引用 service-reader角色
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: service-reader
+subjects:
+  # 将其绑定到foo命名空间下的default sa上
+- kind: ServiceAccount
+  name: default
+  namespace: foo
+  # 绑定的sa可以跨namespace
+- kind: ServiceAccount
+  name: default
+  namespace: bar

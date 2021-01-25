@@ -1,0 +1,28 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: pv-reader
+rules:
+  # persistvolumes资源是核心apiGroup的资源所以为空
+- apiGroups: [""]
+  # 允许的动作
+  verbs: ["get", "list"]
+  # 必须使用复数形式
+  resources: ["persistvolumes"]
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: pv-test
+roleRef:
+  # 引用 pv-reader角色
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: pv-reader
+subjects:
+  # 将其绑定到foo命名空间下的default sa上
+- kind: ServiceAccount
+  name: default
+  namespace: foo
