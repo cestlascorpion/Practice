@@ -1,3 +1,4 @@
+go env -w  GO111MODULE=on
 go mod tidy
 go mod download
 go mod vendor
