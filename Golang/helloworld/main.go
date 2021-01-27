@@ -244,7 +244,7 @@ func testReflect() {
 	typeOfT := _s.Type()
 	for i := 0; i < _s.NumField(); i++ {
 		_f := _s.Field(i)
-		fmt.Printf("%d: %s %s = %v\n",i, typeOfT.Field(i).Name, _f.Type(), _f.Interface())
+		fmt.Printf("%d: %s %s = %v\n", i, typeOfT.Field(i).Name, _f.Type(), _f.Interface())
 	}
 }
 

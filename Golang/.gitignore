@@ -3,6 +3,7 @@
 
 vendor
 build
+conf
 
 *.dot
 *.svg
