@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"strconv"
+	"sync"
 )
 
 // GenerateSvrGraph ...
@@ -23,24 +24,29 @@ func GenerateSvrGraph(svr string, relation *Relation, tag bool) error {
 	} else {
 		path = svr + ".svr.dot"
 	}
-	err := write2DotFile(path, buffer.String())
+	err := Write2DotFile(path, buffer.String())
 	if err != nil {
 		return err
 	}
 
+	var wg sync.WaitGroup
 	for _, l := range LayoutType {
-		var cmd *exec.Cmd
-		if tag {
-			cmd = exec.Command("dot", "-Tsvg", "-K"+l, "-o", l+"."+svr+".svr.tag.svg", svr+".svr.tag.dot")
-		} else {
-			cmd = exec.Command("dot", "-Tsvg", "-K"+l, "-o", l+"."+svr+".svr.svg", svr+".svr.dot")
-		}
-		_, err = cmd.Output()
-		if err != nil {
-			return err
-		}
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			var cmd *exec.Cmd
+			if tag {
+				cmd = exec.Command("dot", "-Tsvg", "-K"+l, "-o", l+"."+svr+".svr.tag.svg", svr+".svr.tag.dot")
+			} else {
+				cmd = exec.Command("dot", "-Tsvg", "-K"+l, "-o", l+"."+svr+".svr.svg", svr+".svr.dot")
+			}
+			_, err = cmd.Output()
+			if err != nil {
+				fmt.Println(err)
+			}
+		}()
 	}
-
+	wg.Wait()
 	return nil
 }
 
@@ -68,7 +74,8 @@ func writeSvr2Buffer(caller string, relation *Relation, buffer *bytes.Buffer, se
 	}
 }
 
-func write2DotFile(path, content string) error {
+// Write2DotFile ...
+func Write2DotFile(path, content string) error {
 	f, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
 	if err != nil {
 		return err

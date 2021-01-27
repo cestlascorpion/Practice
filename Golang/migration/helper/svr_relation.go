@@ -58,3 +58,33 @@ func ParseRelation(file string) (*Relation, error) {
 	}
 	return r, nil
 }
+
+// SplitRelation ...
+func SplitRelation(relation *Relation, svr string) (*Relation, error) {
+	if relation == nil || len(svr) == 0 {
+		return nil, errors.New("invalid parameters")
+	}
+
+	if _, ok := relation.M[svr]; !ok {
+		return nil, errors.New("svr not found")
+	}
+
+	r := &Relation{make(map[string]map[string]int)}
+	set := make(map[string]int)
+
+	addRelation(svr, relation, r, set)
+
+	return r, nil
+}
+
+func addRelation(svr string, relation *Relation, subset *Relation, set map[string]int) {
+	set[svr] = 1
+	m, ok := relation.M[svr]
+	if !ok || len(m) == 0 {
+		return
+	}
+	subset.M[svr] = m
+	for s := range m {
+		addRelation(s, relation, subset, set)
+	}
+}

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"os/exec"
+	"sync"
 )
 
 // GenerateCppDBGraph ...
@@ -18,18 +19,24 @@ func GenerateCppDBGraph(svr string, relation *Relation, usages []*DBRelation) er
 	buffer.WriteString("}")
 
 	path := svr + ".db.dot"
-	err := write2DotFile(path, buffer.String())
+	err := Write2DotFile(path, buffer.String())
 	if err != nil {
 		return err
 	}
 
+	var wg sync.WaitGroup
 	for _, l := range LayoutType {
-		cmd := exec.Command("dot", "-Tsvg", "-K"+l, "-o", l+"."+svr+".db.svg", svr+".db.dot")
-		_, err = cmd.Output()
-		if err != nil {
-			return err
-		}
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			cmd := exec.Command("dot", "-Tsvg", "-K"+l, "-o", l+"."+svr+".db.svg", svr+".db.dot")
+			_, err = cmd.Output()
+			if err != nil {
+				fmt.Println(err)
+			}
+		}()
 	}
+	wg.Wait()
 
 	return nil
 }

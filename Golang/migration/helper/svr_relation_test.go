@@ -15,3 +15,15 @@ func TestParseRelation(t *testing.T) {
 	}
 	r.Print()
 }
+
+func TestSplitRelation(t *testing.T) {
+	r, err := ParseRelation(relation)
+	if err != nil {
+		t.Fatal(err)
+	}
+	s, err := SplitRelation(r, testSvr)
+	if err != nil {
+		t.Fatal(err)
+	}
+	s.Print()
+}
