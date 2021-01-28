@@ -4,10 +4,7 @@ metadata:
   name: cpu-and-mem
 spec:
   hard:
-    requests.cpu: 400m
-    requests.memory: 200Mi
-    limits.cpu: 600m
-    limits.memory: 500Mi
-
----
-
+    requests.cpu: 800m
+    requests.memory: 1000Mi
+    limits.cpu: 900m
+    limits.memory: 1500Mi
