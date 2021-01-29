@@ -1,0 +1,27 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: prod
+  
+spec:
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app: prod
+    spec:
+      containers:
+      - args:
+        - sleep
+        - "99999"
+        image: busybox
+        name: main
+      tolerations:
+      # 禁止发布到生产环境节点
+      - key: node-type
+        operator: Equal
+        value: production
+        effect: NoSchedule
+  selector:
+    matchLabels:
+      app: prod
