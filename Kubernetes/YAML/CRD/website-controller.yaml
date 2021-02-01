@@ -1,0 +1,37 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name:  website-controller
+  namespace: default
+  labels:
+    app:  website-controller
+spec:
+  selector:
+    matchLabels:
+      app: website-controller
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: website-controller
+    spec:
+      serviceAccountName: website-controller
+      containers:
+      - name:  main
+        image:  luksa/website-controller
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
+      - name: proxy
+        image: luksa/kubectl-proxy:1.6.2
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
