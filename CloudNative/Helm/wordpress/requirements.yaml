@@ -1,0 +1,27 @@
+# 如果对依赖进行更多控制，通过将有依赖关系的chart复制到charts/目录中来显式表达这些依赖关系
+# 依赖可以是chart包(foo-1.2.3.tgz) 或者一个解压的chart目录。但是名字不能以_或.开头，否则会被chart加载器忽略
+
+# chart 必要条件列表 （可选）
+# 当前chart依赖的其他chart会在dependencies字段定义为一个列表
+dependencies:
+    # name字段是你需要的chart的名称
+  - name: mariadb
+    # version字段是你需要的chart的版本
+    version: 7.x.x
+    # repository字段是chart仓库的完整URL。注意你必须使用helm repo add在本地添加仓库
+    # 添加后 helm repo add fantastic-charts https://fantastic-charts.storage.googleapis.com 可以使用仓库的名称代替URL
+    # repository: "@fantastic-charts"
+    # 一旦你定义好了依赖，运行 helm dependency update(在包含wordpress的目录) 就会使用你的依赖文件下载所有你指定的chart到你的charts/目录
+    # 当 helm dependency update 拉取chart时，会在charts/目录中形成一个chart包
+    # 手动完成的方式是将同一个chart用不同的名称复制/粘贴多次到charts/目录中
+    repository: https://kubernetes-charts.storage.googleapis.com/
+    # 所有的chart会默认加载。如果存在 tags 或者 condition 字段，它们将被评估并用于控制它们应用的chart的加载
+    # 以后再研究 太复杂了吧 我吐了
+    # 条件字段field 包含一个或多个YAML路径（用逗号分隔）。 如果这个路径在上层values中已存在并解析为布尔值，chart会基于布尔值启用或禁用chart。 只会使用列表中找到的第一个有效路径，如果路径为未找到则条件无效
+    condition: mariadb.enabled
+    # tag字段是与chart关联的YAML格式的标签列表。在顶层value中，通过指定tag和布尔值，可以启用或禁用所有的带tag的chart
+    tags:
+      - wordpress-database
+    # condition （当设置在value中时）总是会覆盖 tag 第一个chart条件路径存在时会忽略后面的路径
+    # tag 被定义为 '如果任意的chart标签是true，chart就可以启用'
+    # 标签和条件值必须被设置在顶层value中，value中的tags:键必须是顶层键。 全局和嵌套的tags:表现在不支持了

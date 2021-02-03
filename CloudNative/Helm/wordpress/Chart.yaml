@@ -1,0 +1,73 @@
+# chart API 版本 （必需）
+# 对于至少需要Helm 3的chart，apiVersion 字段应该是 v2。Chart支持之前apiVersion 设置为 v1 的Helm 版本， 并且在Helm 3中仍然可安装
+# v1 到 v2的改变：dependencies字段定义了chart的依赖，针对于v1 版本的chart被放置在分隔开的requirements.yaml 文件中 （查看 Chart 依赖)；type字段, 用于识别应用和库类型的chart（查看 Chart 类型)
+apiVersion: v1
+
+# chart名称 （必需）
+name: wordpress
+
+# 语义化2 版本（必需）
+# 版本必须遵循 语义化版本 2 标准。 不像经典Helm， Helm v2以及后续版本会使用版本号作为发布标记。仓库中的包通过名称加版本号标识。
+# 比如 nginx chart的版本字段version: 1.2.3按照名称被设置为：nginx-1.2.3.tgz
+version: 9.0.3
+
+# 兼容Kubernetes版本的语义化版本（可选）
+# 可选的 kubeVersion 字段可以在支持的Kubernetes版本上定义语义化版本约束，Helm 在安装chart时会验证这个版本约束， 并在集群运行不支持的Kubernetes版本时显示失败。版本约束可以包括空格分隔和比较运算符，比如：>= 1.13.0 < 1.15.0 或者它们可以用或操作符 || 连接，比如：>= 1.13.0 < 1.14.0 || >= 1.14.1 < 1.15.0 这里面还大有文章
+# kubeVersion: 
+
+# 项目描述（可选）
+description: DEPRECATED Web publishing platform for building blogs and websites.
+
+# chart 类型（可选）
+# 有两种类型： application 和 library。 应用是默认类型，是可以完全操作的标准chart。 库类型 chart 提供针对chart构建的实用程序和功能。 库类型chart与应用类型chart不同，因为它不能安装，通常不包含任何资源对象。应用类型chart 可以作为库类型chart使用。可以通过将类型设置为 library来实现。 然后这个库就被渲染成了一个库类型chart，所有的实用程序和功能都可以使用。所有的资源对象不会被渲染
+# type:
+
+# 关于项目的一组关键字（可选）
+keywords:
+- wordpress
+- cms
+- blog
+- http
+- web
+- application
+- php
+
+# 项目home页面的URL （可选）
+home: http://www.wordpress.com/
+
+# 项目源码的URL列表（可选）
+sources:
+- https://github.com/bitnami/bitnami-docker-wordpress
+
+# 用做icon的SVG或PNG图片URL （可选）
+icon: https://bitnami.com/assets/stacks/wordpress/img/wordpress-stack-220x234.png
+
+# chart 必要条件列表 （可选）
+# dependencies:
+#   - name: chart名称 (nginx)
+#     version: chart版本 ("1.2.3")
+#     repository: 仓库URL ("https://example.com/charts") 或别名 ("@repo-name")
+#     condition: （可选） 解析为布尔值的yaml路径，用于启用/禁用chart (e.g. subchart1.enabled )
+#     tags: # （可选）
+#       - 用于一次启用/禁用 一组chart的tag
+#     import-values: # （可选）
+#       - ImportValue 保存源值到导入父键的映射。每项可以是字符串或者一对子/父列表项
+#     alias: （可选） chart中使用的别名。当你要多次添加相同的chart时会很有用
+
+# maintainers: # （可选）
+#   - name: 维护者名字 （每个维护者都需要）
+#     email: 维护者邮箱 （每个维护者可选）
+#     url: 维护者URL （每个维护者可选）
+
+# 包含的应用版本（可选）。不需要是语义化的
+# appVersion 字段与 version 字段无关。它是指定应用程序版本的一种方式
+appVersion: 5.3.2
+
+# 不被推荐的chart （可选，布尔值）
+deprecated: true
+
+# 按名称输入的批注列表 （可选）
+# annotations:
+#   example: 
+
+engine: gotpl
