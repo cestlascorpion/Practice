@@ -4,6 +4,6 @@ metadata:
   name:  external-service
 spec:
   type: ExternalName
-  externalName: www.baidu.com
+  externalName: "z.cn"
   ports:
-  - port:  80
+  - port: 80
