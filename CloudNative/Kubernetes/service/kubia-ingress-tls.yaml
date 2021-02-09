@@ -3,6 +3,10 @@ apiVersion: extensions/v1beta1
 metadata:
   name: kubia-ingress
 spec:
+  tls:
+  - hosts:
+    - kubia.example.com
+    secretName: tls-secret
   rules:
   - host: kubia.example.com
     http:
