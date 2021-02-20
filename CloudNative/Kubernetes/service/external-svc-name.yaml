@@ -1,9 +1,10 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name:  external-service
+  name: external-service
 spec:
   type: ExternalName
   externalName: "z.cn"
   ports:
   - port: 80
+  
