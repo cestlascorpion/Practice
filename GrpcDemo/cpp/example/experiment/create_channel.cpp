@@ -49,18 +49,6 @@ static string grpc_egress_address() {
     return grpc_egress_address;
 }
 
-/*
-Global Callbacks Can be set exactly once per application to install hooks
-whenever a client context is constructed and destructed.
-
-class GlobalCallbacks {
-public:
-    virtual ~GlobalCallbacks() {}
-    virtual void DefaultConstructor(ClientContext* context) = 0;
-    virtual void Destructor(ClientContext* context) = 0;
-};
- */
-
 class GrpcClientContextCallbacks : public ClientContext::GlobalCallbacks {
 public:
     ~GrpcClientContextCallbacks() override {
@@ -69,6 +57,7 @@ public:
 
     void DefaultConstructor(ClientContext *context) override {
         printf("[%s] default construct\n", __func__);
+
         static const milliseconds default_unary_call_timeout(3000);
         context->set_wait_for_ready(false);
     }
@@ -82,16 +71,17 @@ class GrpcEnvSetup final {
 public:
     GrpcEnvSetup() {
         printf("[%s] construct\n", __func__);
+
         static GrpcClientContextCallbacks global_client_context_callbacks;
         ClientContext::SetGlobalCallbacks(&global_client_context_callbacks);
-        // custom
+
         setenv("GRPC_DNS_RESOLVER", "ares", 1);
 
         const char *severity = getenv("GRPC_VERBOSITY");
         if (severity != nullptr) {
             printf("InitGrpcExtension: log severity %s\n", severity);
         }
-        // hooks grpc logging
+
         gpr_set_log_function(grpc_log);
     }
 };

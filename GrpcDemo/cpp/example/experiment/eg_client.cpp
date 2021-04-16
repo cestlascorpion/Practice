@@ -5,9 +5,7 @@ using namespace std;
 
 namespace example {
 
-static const char *k_service_name = "echo";
 static const char *k_default_target = "echo.example.local:16001";
-// static const char *k_default_target = "localhost:16001";
 
 shared_ptr<Client> default_client() {
     static shared_ptr<Client> cli(new Client(k_default_target));
@@ -16,6 +14,7 @@ shared_ptr<Client> default_client() {
 
 Client::Client(const string &target) {
     printf("[%s] construct\n", __func__);
+
     auto channel = grpc_ext::CreateInsecureChannel(target);
     stub_ = EchoService::NewStub(channel);
 }
