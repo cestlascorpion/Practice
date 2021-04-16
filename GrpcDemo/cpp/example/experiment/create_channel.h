@@ -6,6 +6,6 @@
 
 namespace grpc_ext {
 
-std::shared_ptr<grpc::Channel> CreateInsecureChannel(const std::string &target, bool *egress_enabled_ptr = nullptr);
+std::shared_ptr<grpc::Channel> CreateInsecureChannel(const std::string &target);
 
 }

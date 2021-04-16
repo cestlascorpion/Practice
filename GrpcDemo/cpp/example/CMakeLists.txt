@@ -64,22 +64,10 @@ add_custom_command (
 # Include generated *.pb.h files
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 
-# Find boost installation
-find_package(Boost REQUIRED COMPONENTS system thread)
-if (Boost_FOUND)
-    message(STATUS "Using boost ${Boost_VERSION}")
-else ()
-    message(FATAL_ERROR "boost not found")
-endif ()
-
-include_directories(${Boost_INCLUDE_DIRS})
-
 include_directories(executable experiment)
 
 file(GLOB_RECURSE EXT_SRC experiment/*.cpp)
 file(GLOB_RECURSE EXT_HDR experiment/*.h)
-
-add_library(grpc_ext STATIC ${EXT_SRC} ${EXT_HDR})
 
 # Targets greeter_[async_](client|server)
 foreach(
@@ -102,8 +90,6 @@ foreach(
             ${_target}
             ${_REFLECTION}
             ${_GRPC_GRPCPP}
-            ${_PROTOBUF_LIBPROTOBUF}
-            ${Boost_LIBRARIES}
-            ${PROJECT_BINARY_DIR}/libgrpc_ext.a)
+            ${_PROTOBUF_LIBPROTOBUF})
 
 endforeach()
