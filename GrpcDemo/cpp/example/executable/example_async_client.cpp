@@ -13,9 +13,9 @@ using namespace std;
 
 namespace example {
 
-class ExmapleClient {
+class ExampleClient {
 public:
-    explicit ExmapleClient(shared_ptr<::grpc::Channel> channel)
+    explicit ExampleClient(shared_ptr<::grpc::Channel> channel)
         : stub_(EchoService::NewStub(channel)) {}
 
 public:
@@ -60,13 +60,13 @@ private:
 int main() {
     string address = "localhost:16001";
     // 创建 channel - 创建调用桩
-    example::ExmapleClient client(::grpc::CreateChannel(address, ::grpc::InsecureChannelCredentials()));
+    example::ExampleClient client(::grpc::CreateChannel(address, ::grpc::InsecureChannelCredentials()));
 
-    for (int i = 0; i < 5; ++i) {
+    for (auto i = 0u; i < 5; ++i) {
         uint32_t uid = 0;
         string response;
         // 同步调用: 使用异步方法的同步调用
-        bool ok = client.Echo(1234 + i, "hello world", uid, response);
+        bool ok = client.Echo(1234u + i, "hello world", uid, response);
         if (ok) {
             printf("uid: %u content: %s\n", uid, response.c_str());
         }

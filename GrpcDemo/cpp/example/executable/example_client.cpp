@@ -13,7 +13,7 @@ namespace example {
 
 class EchoClient {
 public:
-    EchoClient(shared_ptr<::grpc::Channel> channel)
+    explicit EchoClient(shared_ptr<::grpc::Channel> channel)
         : stub_(EchoService::NewStub(channel)) {}
 
 public:
@@ -51,11 +51,11 @@ int main() {
     // 创建 channel - 创建调用桩
     example::EchoClient client(::grpc::CreateChannel(address, ::grpc::InsecureChannelCredentials()));
 
-    for (int i = 0; i < 5; ++i) {
+    for (auto i = 0u; i < 5; ++i) {
         uint32_t uid = 0;
         string response;
         // 同步调用
-        bool ok = client.Echo(1234 + i, "hello world", uid, response);
+        bool ok = client.Echo(1234u + i, "hello world", uid, response);
         if (ok) {
             printf("response: %u %s\n", uid, response.c_str());
         }

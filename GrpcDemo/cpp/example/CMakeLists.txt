@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 project(example C CXX)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 11)
 
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wconversion -Wsizeof-pointer-memaccess \
                      -Wfloat-equal -Wconversion-null -Woverflow -Wshadow \
@@ -32,7 +32,7 @@ set(_PROTOBUF_PROTOC $<TARGET_FILE:protobuf::protoc>)
 
 # Find gRPC installation
 # Looks for gRPCConfig.cmake file installed by gRPC's cmake installation.
-find_package(gRPC CONFIG REQUIRED)
+find_package(gRPC REQUIRED)
 if (gRPC_FOUND)
   message(STATUS "Using gRPC ${gRPC_VERSION}")
 else ()
@@ -64,22 +64,46 @@ add_custom_command (
 # Include generated *.pb.h files
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 
-# Targets greeter_[async_](client|server)
-foreach(_target
-    example_server
-    example_client
-    example_async_server
-    example_async_client
-    example_async_thread_client)
-    
-    add_executable(${_target} 
-        "${_target}.cpp"
-        ${PROTO_SRC}
-        ${GRPC_SRC})
+# Find boost installation
+find_package(Boost REQUIRED COMPONENTS system thread)
+if (Boost_FOUND)
+    message(STATUS "Using boost ${Boost_VERSION}")
+else ()
+    message(FATAL_ERROR "boost not found")
+endif ()
 
-    target_link_libraries(${_target}
-        ${_REFLECTION}
-        ${_GRPC_GRPCPP}
-        ${_PROTOBUF_LIBPROTOBUF})
+include_directories(${Boost_INCLUDE_DIRS})
+
+include_directories(executable experiment)
+
+file(GLOB_RECURSE EXT_SRC experiment/*.cpp)
+file(GLOB_RECURSE EXT_HDR experiment/*.h)
+
+add_library(grpc_ext STATIC ${EXT_SRC} ${EXT_HDR})
+
+# Targets greeter_[async_](client|server)
+foreach(
+        _target
+        example_server
+        example_client
+        example_async_server
+        example_async_client
+        example_async_thread_client
+        example_template_client)
+    
+    add_executable(
+            ${_target}
+            "executable/${_target}.cpp"
+            ${PROTO_SRC}
+            ${GRPC_SRC}
+            ${EXT_SRC})
+
+    target_link_libraries(
+            ${_target}
+            ${_REFLECTION}
+            ${_GRPC_GRPCPP}
+            ${_PROTOBUF_LIBPROTOBUF}
+            ${Boost_LIBRARIES}
+            ${PROJECT_BINARY_DIR}/libgrpc_ext.a)
 
 endforeach()

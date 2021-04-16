@@ -12,9 +12,9 @@ using namespace std;
 
 namespace example {
 
-class ExmapleClient {
+class ExampleClient {
 public:
-    explicit ExmapleClient(shared_ptr<::grpc::Channel> channel)
+    explicit ExampleClient(shared_ptr<::grpc::Channel> channel)
         : stub_(EchoService::NewStub(channel)) {}
 
 public:
@@ -24,7 +24,7 @@ public:
         req.set_uid(uid);
         req.set_content(request);
         // 2. 准备 AsyncClient 初始化 cq
-        AsyncClient *cli = new AsyncClient; // 一次 rpc 所需的独立的 context status
+        auto *cli = new AsyncClient; // 一次 rpc 所需的独立的 context status
         cli->response_reader = stub_->PrepareAsyncEcho(&cli->context, req, &cq_);
         // 3. 异步调用 AsyncClient 被用作 tag
         cli->response_reader->StartCall();
@@ -37,7 +37,7 @@ public:
         bool ok = false;
         while (cq_.Next(&got_tag, &ok)) {
             // AsyncClient 被用作 tag
-            AsyncClient *cli = static_cast<AsyncClient *>(got_tag);
+            auto *cli = static_cast<AsyncClient *>(got_tag);
             GPR_ASSERT(ok);
             if (cli->status.ok()) {
                 printf("uid: %u content: %s\n", cli->resp.uid(), cli->resp.content().c_str());
@@ -65,12 +65,12 @@ private:
 
 int main() {
     string address = "localhost:16001";
-    example::ExmapleClient client(::grpc::CreateChannel(address, ::grpc::InsecureChannelCredentials()));
+    example::ExampleClient client(::grpc::CreateChannel(address, ::grpc::InsecureChannelCredentials()));
     // 检查异步返回结果的线程
-    thread thread_ = thread(&example::ExmapleClient::AsyncCompleteRpc, &client);
+    thread thread_ = thread(&example::ExampleClient::AsyncCompleteRpc, &client);
     // 异步调用
-    for (int i = 0; i < 5; ++i) {
-        client.Echo(1234 + i, "hello world");
+    for (auto i = 0u; i < 5; ++i) {
+        client.Echo(1234u + i, "hello world");
         this_thread::sleep_for(chrono::seconds(2));
     }
     printf("Press CTRL-C to quit\n");
