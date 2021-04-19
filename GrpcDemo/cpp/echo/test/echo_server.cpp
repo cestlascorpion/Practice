@@ -4,18 +4,18 @@
 #include <grpcpp/grpcpp.h>
 #include <grpcpp/health_check_service_interface.h>
 
-#include "example.grpc.pb.h"
-#include "example.pb.h"
+#include "echo.grpc.pb.h"
+#include "echo.pb.h"
 
 using namespace std;
 
-namespace example {
+namespace echo {
 
 // 继承并重写服务要求的方法
 class EchoServiceImpl final : public EchoService::Service {
 public:
-    ::grpc::Status Echo(::grpc::ServerContext *context, const ::example::EchoRequest *request,
-                        ::example::EchoResponse *response) override {
+    ::grpc::Status Echo(::grpc::ServerContext *context, const ::echo::EchoRequest *request,
+                        ::echo::EchoResponse *response) override {
         // 检查超时
         if (chrono::system_clock::now() < context->deadline()) {
             printf("request %s\n", request->ShortDebugString().c_str());
@@ -43,9 +43,9 @@ void RunServer() {
     server->Wait();
 }
 
-} // namespace example
+} // namespace echo
 
 int main() {
-    example::RunServer();
+    echo::RunServer();
     return 0;
 }

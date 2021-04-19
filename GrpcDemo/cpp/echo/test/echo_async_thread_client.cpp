@@ -5,12 +5,12 @@
 #include <grpc/support/log.h>
 #include <grpcpp/grpcpp.h>
 
-#include "example.grpc.pb.h"
-#include "example.pb.h"
+#include "echo.grpc.pb.h"
+#include "echo.pb.h"
 
 using namespace std;
 
-namespace example {
+namespace echo {
 
 class ExampleClient {
 public:
@@ -61,13 +61,13 @@ private:
     ::grpc::CompletionQueue cq_;
 };
 
-} // namespace example
+} // namespace echo
 
 int main() {
     string address = "localhost:16001";
-    example::ExampleClient client(::grpc::CreateChannel(address, ::grpc::InsecureChannelCredentials()));
+    echo::ExampleClient client(::grpc::CreateChannel(address, ::grpc::InsecureChannelCredentials()));
     // 检查异步返回结果的线程
-    thread thread_ = thread(&example::ExampleClient::AsyncCompleteRpc, &client);
+    thread thread_ = thread(&echo::ExampleClient::AsyncCompleteRpc, &client);
     // 异步调用
     for (auto i = 0u; i < 5; ++i) {
         client.Echo(1234u + i, "hello world");

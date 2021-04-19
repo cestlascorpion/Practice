@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(example C CXX)
+project(echo C CXX)
 
 set(CMAKE_CXX_STANDARD 11)
 
@@ -42,7 +42,7 @@ endif ()
 set(_GRPC_GRPCPP gRPC::grpc++)
 set(_GRPC_CPP_PLUGIN_EXECUTABLE $<TARGET_FILE:gRPC::grpc_cpp_plugin>)
 
-set(PROTO_NAME example)
+set(PROTO_NAME echo)
 
 # Proto file
 get_filename_component(PROTO_FILE "../../proto/${PROTO_NAME}.proto" ABSOLUTE)
@@ -74,27 +74,27 @@ endif ()
 
 include_directories(${Boost_INCLUDE_DIRS})
 
-include_directories(executable experiment)
+include_directories(test grpc)
 
-file(GLOB_RECURSE EXT_SRC experiment/*.cpp)
-file(GLOB_RECURSE EXT_HDR experiment/*.h)
+file(GLOB_RECURSE EXT_SRC grpc/*.cpp)
+file(GLOB_RECURSE EXT_HDR grpc/*.h)
 
 add_library(grpc_ext STATIC ${EXT_SRC} ${EXT_HDR})
 
 # Targets greeter_[async_](client|server)
 foreach(
         _target
-        example_server
-        example_client
-        example_async_server
-        example_async_client
-        example_async_thread_client
-        example_template_client_v1
-        example_template_client_v2)
+        echo_server
+        echo_client
+        echo_async_server
+        echo_async_client
+        echo_async_thread_client
+        echo_template_client_v1
+        echo_template_client_v2)
     
     add_executable(
             ${_target}
-            "executable/${_target}.cpp"
+            "test/${_target}.cpp"
             ${PROTO_SRC}
             ${GRPC_SRC}
             ${EXT_SRC})

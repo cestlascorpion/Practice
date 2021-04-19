@@ -3,10 +3,10 @@
 #include <memory>
 #include <string>
 
-#include "example.grpc.pb.h"
+#include "echo.grpc.pb.h"
 #include "grpc_ext_client.h"
 
-namespace example {
+namespace echo {
 
 class Client_v1 final : private grpc_ext::grpc_client {
 public:
@@ -22,9 +22,9 @@ private:
 
 std::shared_ptr<Client_v1> shared_client();
 
-} // namespace example
+} // namespace echo
 
-namespace example {
+namespace echo {
 
 class Client_v2 final {
 public:
@@ -40,4 +40,4 @@ private:
 
 std::shared_ptr<Client_v2> default_client();
 
-} // namespace example
+} // namespace echo

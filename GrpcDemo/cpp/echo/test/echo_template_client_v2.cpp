@@ -1,17 +1,17 @@
-#include "example_client.h"
+#include "echo_grpc_client.h"
 
 #include <string>
 
 using namespace std;
 
 int main() {
-    auto client = example::shared_client();
+    auto client = echo::default_client();
 
     uint32_t uid = 0;
     string response;
 
-    auto ret = client->Echo(1234u, "hello world", uid, response);
-    if (ret == 0) {
+    auto status = client->Echo(1234u, "hello world", uid, response);
+    if (status.ok()) {
         printf("response: %u %s\n", uid, response.c_str());
     }
 }

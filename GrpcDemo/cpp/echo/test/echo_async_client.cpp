@@ -6,12 +6,12 @@
 #include <grpc/support/log.h>
 #include <grpcpp/grpcpp.h>
 
-#include "example.grpc.pb.h"
-#include "example.pb.h"
+#include "echo.grpc.pb.h"
+#include "echo.pb.h"
 
 using namespace std;
 
-namespace example {
+namespace echo {
 
 class ExampleClient {
 public:
@@ -55,12 +55,12 @@ private:
     unique_ptr<EchoService::Stub> stub_;
 };
 
-} // namespace example
+} // namespace echo
 
 int main() {
     string address = "localhost:16001";
     // 创建 channel - 创建调用桩
-    example::ExampleClient client(::grpc::CreateChannel(address, ::grpc::InsecureChannelCredentials()));
+    echo::ExampleClient client(::grpc::CreateChannel(address, ::grpc::InsecureChannelCredentials()));
 
     for (auto i = 0u; i < 5; ++i) {
         uint32_t uid = 0;

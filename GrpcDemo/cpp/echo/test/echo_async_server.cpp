@@ -3,12 +3,12 @@
 #include <grpc/support/log.h>
 #include <grpcpp/grpcpp.h>
 
-#include "example.grpc.pb.h"
-#include "example.pb.h"
+#include "echo.grpc.pb.h"
+#include "echo.pb.h"
 
 using namespace std;
 
-namespace example {
+namespace echo {
 
 class ExampleServer final {
 public:
@@ -78,10 +78,10 @@ private:
     std::unique_ptr<::grpc::Server> server_;
 };
 
-} // namespace example
+} // namespace echo
 
 int main() {
-    example::ExampleServer server;
+    echo::ExampleServer server;
     server.Run();
     return 0;
 }

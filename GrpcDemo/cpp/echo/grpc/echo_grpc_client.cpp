@@ -1,12 +1,12 @@
-#include "example_client.h"
+#include "echo_grpc_client.h"
 #include "create_channel.h"
 
 using namespace std;
 
-namespace example {
+namespace echo {
 
-static const char *k_service = "example";
-static const char *k_default_target = "echo.example.local:16001";
+static const char *k_service = "echo";
+static const char *k_default_target = "echo.svc.local:16001";
 
 shared_ptr<Client_v1> shared_client() {
     static shared_ptr<Client_v1> cli(new Client_v1());
@@ -42,7 +42,7 @@ Client_v2::~Client_v2() {
 int Client_v1::Echo(uint32_t inId, const std::string &request, uint32_t &outId, std::string &response) {
     printf("[%s] Echo Method\n", __func__);
 
-    example::EchoRequest req;
+    echo::EchoRequest req;
     req.set_uid(inId);
     req.set_content(request);
 
@@ -51,7 +51,7 @@ int Client_v1::Echo(uint32_t inId, const std::string &request, uint32_t &outId, 
     const char *method = __func__;
     grpc::ClientContext context;
 
-    example::EchoResponse resp;
+    echo::EchoResponse resp;
     auto status = BlockingUnaryCall(
         &context,
         [&](grpc::ClientContext *ctx) {
@@ -78,4 +78,4 @@ grpc::Status Client_v2::Echo(uint32_t inId, const string &request, uint32_t &out
     return status;
 }
 
-} // namespace example
+} // namespace echo
