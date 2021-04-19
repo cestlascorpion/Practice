@@ -13,10 +13,10 @@ using namespace grpc;
 
 namespace grpc_ext {
 
-grpc_client::grpc_client(std::string target, std::string service, std::string authority)
-    : target_(std::move(target))
-    , service_(std::move(service))
-    , authority_(std::move(authority))
+grpc_client::grpc_client(string target, string service, string authority)
+    : target_(move(target))
+    , service_(move(service))
+    , authority_(move(authority))
     , egress_enabled_(false) {
     printf("[%s] construct\n", __func__);
     Connect();
@@ -36,7 +36,7 @@ void grpc_client::Connect() {
         boost::unique_lock<boost::shared_mutex> lk(channel_lock_);
         channel_ = channel;
         egress_enabled_ = egress_enabled;
-        printf("[%s] target %s egress %d", __func__, target_.c_str(), egress_enabled_);
+        printf("[%s] target %s egress %d\n", __func__, target_.c_str(), egress_enabled_);
     }
 }
 
@@ -46,7 +46,7 @@ shared_ptr<Channel> grpc_client::Channel() {
     return channel;
 }
 
-Status grpc_client::BlockingUnaryCall(ClientContext *context, const std::function<Status(ClientContext *)> &func,
+Status grpc_client::BlockingUnaryCall(ClientContext *context, const function<Status(ClientContext *)> &func,
                                       const grpc_client::callInfo &info) {
     printf("[%s]\n", __func__);
 
@@ -54,7 +54,7 @@ Status grpc_client::BlockingUnaryCall(ClientContext *context, const std::functio
         context->set_authority(authority_);
     }
 
-    static const std::string uin_key = "uin";
+    static const string uin_key = "uin";
     static const auto unary_call_timeout = milliseconds(3000);
 
     auto timeout = info.timeout_ > 0 ? milliseconds(info.timeout_) : unary_call_timeout;
@@ -66,10 +66,10 @@ Status grpc_client::BlockingUnaryCall(ClientContext *context, const std::functio
     try {
         status = func(context);
     } catch (const exception &ex) {
-        printf("[%s] exception %s service %s method %s", __func__, ex.what(), service_.c_str(), info.method_.c_str());
+        printf("[%s] exception %s service %s method %s\n", __func__, ex.what(), service_.c_str(), info.method_.c_str());
         status = Status(StatusCode(-2), ex.what());
     } catch (...) {
-        printf("[%s] unknown exception service %s method %s", __func__, service_.c_str(), info.method_.c_str());
+        printf("[%s] unknown exception service %s method %s\n", __func__, service_.c_str(), info.method_.c_str());
         status = Status(StatusCode(-2), "");
     }
 
@@ -84,7 +84,7 @@ Status grpc_client::BlockingUnaryCall(ClientContext *context, const std::functio
             } else {
                 status_code = status.error_code();
             }
-            printf("[%s] grpc error %d %d service %s method %s", __func__, status.error_code(), status_code,
+            printf("[%s] grpc error %d %d service %s method %s\n", __func__, status.error_code(), status_code,
                    service_.c_str(), info.method_.c_str());
             Connect();
         } else {
@@ -104,10 +104,10 @@ Status grpc_client::BlockingUnaryCall(ClientContext *context, const std::functio
 
 namespace grpc_ext {
 
-static string metadata_get_first(const multimap<grpc::string_ref, grpc::string_ref> &md, const grpc::string_ref &key) {
+static string metadata_get_first(const multimap<string_ref, string_ref> &md, const string_ref &key) {
     auto range = md.equal_range(key);
     if (range.first != md.end()) {
-        return grpc::string(range.first->second.begin(), range.first->second.end());
+        return string(range.first->second.begin(), range.first->second.end());
     }
     return "";
 }

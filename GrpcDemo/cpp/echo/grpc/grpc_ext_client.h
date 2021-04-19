@@ -118,7 +118,7 @@ public:
             if (channel == last_channel_) {
                 return stub_;
             }
-            printf("[%s] name %s create new stub", __func__, name_.c_str());
+            printf("[%s] name %s create new stub\n", __func__, name_.c_str());
             stub_.reset(new Stub(channel));
             last_channel_ = channel;
             return stub_;

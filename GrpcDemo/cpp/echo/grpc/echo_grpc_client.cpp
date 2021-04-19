@@ -2,6 +2,7 @@
 #include "create_channel.h"
 
 using namespace std;
+using namespace grpc;
 
 namespace echo {
 
@@ -39,32 +40,36 @@ Client_v2::~Client_v2() {
     printf("[%s] deconstruct\n", __func__);
 }
 
-int Client_v1::Echo(uint32_t inId, const std::string &request, uint32_t &outId, std::string &response) {
+int Client_v1::Echo(uint32_t inId, const string &request, uint32_t &outId, string &response) {
     printf("[%s] Echo Method\n", __func__);
 
-    echo::EchoRequest req;
+    EchoRequest req;
     req.set_uid(inId);
     req.set_content(request);
 
     auto channel = Channel();
     auto stub = stub_.WithChannel(channel);
     const char *method = __func__;
-    grpc::ClientContext context;
+    ClientContext context;
 
-    echo::EchoResponse resp;
+    EchoResponse resp;
     auto status = BlockingUnaryCall(
         &context,
-        [&](grpc::ClientContext *ctx) {
+        [&](ClientContext *ctx) {
             return grpc_ext::invoke_stub_func(method, ctx, stub.get(), &EchoService::StubInterface::Echo, req, &resp);
         },
         WithMethod(method));
+    if (status.ok()) {
+        outId = resp.uid();
+        response = resp.content();
+    }
     return int(status.error_code());
 }
 
-grpc::Status Client_v2::Echo(uint32_t inId, const string &request, uint32_t &outId, string &response) {
+Status Client_v2::Echo(uint32_t inId, const string &request, uint32_t &outId, string &response) {
     printf("[%s] Echo Method\n", __func__);
 
-    grpc::ClientContext cc;
+    ClientContext cc;
     EchoRequest req;
     req.set_uid(inId);
     req.set_content(request);

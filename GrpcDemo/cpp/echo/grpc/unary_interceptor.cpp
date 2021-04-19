@@ -18,9 +18,9 @@ using namespace chrono;
 using namespace grpc;
 using namespace experimental;
 
-using MetaType = multimap<grpc::string_ref, grpc::string_ref>;
+using MetaType = multimap<string_ref, string_ref>;
 
-static bool MetaGet(const MetaType &meta, const grpc::string_ref &key, grpc::string *value) {
+static bool MetaGet(const MetaType &meta, const string_ref &key, string *value) {
     auto range = meta.equal_range(key);
     if (range.first != meta.end()) {
         value->assign(range.first->second.begin(), range.first->second.end());
@@ -29,8 +29,8 @@ static bool MetaGet(const MetaType &meta, const grpc::string_ref &key, grpc::str
     return false;
 }
 
-static bool MetaGet(const MetaType &meta, const grpc::string_ref &key, int *value) {
-    grpc::string val;
+static bool MetaGet(const MetaType &meta, const string_ref &key, int *value) {
+    string val;
     if (MetaGet(meta, key, &val)) {
         *value = (int)strtol(val.c_str(), nullptr, 10);
         return true;
@@ -121,7 +121,7 @@ public:
 
             auto status = methods->GetRecvStatus();
             int status_code = 0, custom_code = 0;
-            grpc::string status_message, custom_message;
+            string status_message, custom_message;
             if (status != nullptr) {
                 status_code = status->error_code();
                 status_message = status->error_message();
@@ -156,7 +156,7 @@ public:
     }
 
 private:
-    static void InvokeMeta(const MetaType &meta, int *code, grpc::string *message) {
+    static void InvokeMeta(const MetaType &meta, int *code, string *message) {
         if (MetaGet(meta, grpc_ext::k_server_error_code, code)) {
             MetaGet(meta, grpc_ext::k_server_error_message, message);
             return;
@@ -170,7 +170,7 @@ private:
         printf("no custom code and message\n");
     }
 
-    static tuple<grpc::string, grpc::string> GetMethod(const char *method) {
+    static tuple<string, string> GetMethod(const char *method) {
         {
             boost::shared_lock<boost::shared_mutex> lk(methods_lock_);
             auto iter = methods_.find(method);
@@ -180,7 +180,7 @@ private:
             }
         }
 
-        const std::string extra(method);
+        const string extra(method);
         printf("add method %s\n", extra.c_str());
         auto first_slash = extra.find_first_of('/', 1);
         auto service = extra.substr(1, first_slash - 1);
@@ -196,7 +196,7 @@ private:
     }
 
 private:
-    static unordered_map<const char *, tuple<grpc::string, grpc::string>> methods_;
+    static unordered_map<const char *, tuple<string, string>> methods_;
     static boost::shared_mutex methods_lock_;
 
 private:
@@ -205,7 +205,7 @@ private:
     high_resolution_clock::time_point start_;
 };
 
-unordered_map<const char *, tuple<grpc::string, grpc::string>> UnaryInterceptor::methods_;
+unordered_map<const char *, tuple<string, string>> UnaryInterceptor::methods_;
 boost::shared_mutex UnaryInterceptor::methods_lock_;
 
 namespace grpc_ext {

@@ -142,7 +142,7 @@ shared_ptr<Channel> CreateInsecureChannel(const string &target, bool *egress_ena
         args.SetInt(GRPC_ARG_USE_LOCAL_SUBCHANNEL_POOL, 1);
 
         vector<unique_ptr<ClientInterceptorFactoryInterface>> factories;
-        factories.emplace_back(new grpc_ext::UnaryInterceptorFactory());
+        factories.emplace_back(new UnaryInterceptorFactory());
         out = CreateCustomChannelWithInterceptors(target, InsecureChannelCredentials(), args, move(factories));
     }
 
