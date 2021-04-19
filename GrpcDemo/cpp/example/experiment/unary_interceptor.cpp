@@ -1,4 +1,5 @@
 #include "unary_interceptor.h"
+#include "grpc_ext_common.h"
 
 #include <grpc/support/log.h>
 #include <grpcpp/channel.h>
@@ -16,16 +17,6 @@ using namespace chrono;
 
 using namespace grpc;
 using namespace experimental;
-
-static const char *k_request_uid = "x-request-uid";
-
-static const char *k_server_error_code = "x-server-error-code";
-static const char *k_server_error_message = "x-server-error-message";
-
-static const char *k_ot_span_context = "x-ot-span-context";
-
-static const char *k_server_error_code_compatible = "resp_code";
-static const char *k_server_error_message_compatible = "resp_msg";
 
 using MetaType = multimap<grpc::string_ref, grpc::string_ref>;
 
@@ -72,12 +63,13 @@ public:
 
             start_ = high_resolution_clock::now();
             auto meta = methods->GetSendInitialMetadata();
-            auto iter = meta->find(k_request_uid);
+            auto iter = meta->find(grpc_ext::k_request_uid);
             if (iter != meta->end()) {
                 uid_ = (uint32_t)stoul(iter->second, nullptr, 10);
                 printf("[%s] uid %u", __func__, uid_);
             }
-            meta->emplace(k_ot_span_context, "trace id for test");
+            printf("****** ADD TRACE ID ******\n");
+            meta->emplace(grpc_ext::k_ot_span_context, "trace id for test");
         }
 
         if (methods->QueryInterceptionHookPoint(InterceptionHookPoints::PRE_SEND_MESSAGE)) {
@@ -143,6 +135,7 @@ public:
             auto duration = duration_cast<milliseconds>(high_resolution_clock::now() - start_).count();
             auto SvcAndFunc = GetMethod(info_->method());
             auto channelState = info_->channel()->GetState(false);
+            printf("****** FUNC TRACK ******\n");
             printf("service %s function %s cost %ld ms ip %s(%s) status %d(%s) result %d(%s) conn %d\n",
                    get<0>(SvcAndFunc).c_str(), get<1>(SvcAndFunc).c_str(), duration,
                    info_->client_context()->peer().c_str(), info_->client_context()->debug_error_string().c_str(),
@@ -164,13 +157,13 @@ public:
 
 private:
     static void InvokeMeta(const MetaType &meta, int *code, grpc::string *message) {
-        if (MetaGet(meta, k_server_error_code, code)) {
-            MetaGet(meta, k_server_error_message, message);
+        if (MetaGet(meta, grpc_ext::k_server_error_code, code)) {
+            MetaGet(meta, grpc_ext::k_server_error_message, message);
             return;
         }
 
-        if (MetaGet(meta, k_server_error_code_compatible, code)) {
-            MetaGet(meta, k_server_error_message_compatible, message);
+        if (MetaGet(meta, grpc_ext::k_server_error_code_compatible, code)) {
+            MetaGet(meta, grpc_ext::k_server_error_message_compatible, message);
             return;
         }
 

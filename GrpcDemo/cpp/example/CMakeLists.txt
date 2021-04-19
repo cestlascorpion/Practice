@@ -89,7 +89,8 @@ foreach(
         example_async_server
         example_async_client
         example_async_thread_client
-        example_template_client)
+        example_template_client_v1
+        example_template_client_v2)
     
     add_executable(
             ${_target}
