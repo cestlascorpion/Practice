@@ -74,13 +74,6 @@ endif ()
 
 include_directories(${Boost_INCLUDE_DIRS})
 
-include_directories(test grpc)
-
-file(GLOB_RECURSE EXT_SRC grpc/*.cpp)
-file(GLOB_RECURSE EXT_HDR grpc/*.h)
-
-add_library(grpc_ext STATIC ${EXT_SRC} ${EXT_HDR})
-
 # Targets greeter_[async_](client|server)
 foreach(
         _target
@@ -88,13 +81,11 @@ foreach(
         echo_client
         echo_async_server
         echo_async_client
-        echo_async_thread_client
-        echo_template_client_v1
-        echo_template_client_v2)
+        echo_async_thread_client)
     
     add_executable(
             ${_target}
-            "test/${_target}.cpp"
+            "src/${_target}.cpp"
             ${PROTO_SRC}
             ${GRPC_SRC}
             ${EXT_SRC})
@@ -104,7 +95,6 @@ foreach(
             ${_REFLECTION}
             ${_GRPC_GRPCPP}
             ${_PROTOBUF_LIBPROTOBUF}
-            ${Boost_LIBRARIES}
-            ${PROJECT_BINARY_DIR}/libgrpc_ext.a)
+            ${Boost_LIBRARIES})
 
 endforeach()
