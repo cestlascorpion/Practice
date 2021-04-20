@@ -50,7 +50,6 @@ Status grpc_client::BlockingUnaryCall(ClientContext *context, const function<Sta
     context->set_deadline(system_clock::now() + timeout);
 
     Status status;
-    const auto start = high_resolution_clock::now();
     try {
         status = func(context);
     } catch (const exception &ex) {
