@@ -1,0 +1,17 @@
+syntax = "proto3";
+option go_package = "protocol/example/echo";
+package example.echo;
+
+service EchoService {
+    rpc Echo (EchoRequest) returns (EchoResponse);
+}
+
+message EchoRequest {
+    uint32 uid = 1;
+    bytes content = 2;
+}
+
+message EchoResponse {
+    uint32 uid = 1;
+    bytes content = 2;
+}
