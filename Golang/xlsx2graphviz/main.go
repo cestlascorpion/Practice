@@ -17,7 +17,7 @@ var sht string
 
 func init() {
 	flag.StringVar(&svr, "svr", "", "service name")
-	flag.StringVar(&xls, "xls", "/home/godman/Source/Blinding/xlsx2graphviz/generate/services.xlsx", "xls's path")
+	flag.StringVar(&xls, "xls", "~/Workspace/Practice/Golang/xlsx2graphviz/services.xlsx", "xls's path")
 	flag.StringVar(&sht, "sht", "one", "sheet name")
 	flag.Parse()
 }
@@ -96,9 +96,9 @@ func dumpBuf(caller string, dict map[string][]string, buffer *bytes.Buffer, set 
 	for _, callee := range ss {
 		var relation string
 		if addDepth {
-			relation = fmt.Sprintf("\t%s->%s;\n", caller+"_"+strconv.Itoa(depth), callee+"_"+strconv.Itoa(depth+1))
+			relation = fmt.Sprintf("\t\"%s\"->\"%s\";\n", caller+"_"+strconv.Itoa(depth), callee+"_"+strconv.Itoa(depth+1))
 		} else {
-			relation = fmt.Sprintf("\t%s->%s;\n", caller, callee)
+			relation = fmt.Sprintf("\t\"%s\"->\"%s\";\n", caller, callee)
 		}
 		buffer.WriteString(relation)
 		dumpBuf(callee, dict, buffer, set, depth+1, addDepth)
